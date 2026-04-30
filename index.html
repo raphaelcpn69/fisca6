@@ -26,32 +26,48 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:var(--font);co
 #app{width:100%;height:100%;display:flex;flex-direction:column;max-width:430px;margin:0 auto;background:var(--bg);overflow:hidden;box-shadow:0 0 60px rgba(13,27,75,.25);position:relative}
 
 /* ── WELCOME SCREEN ── */
-#welcome-screen{position:fixed;inset:0;z-index:1000;background:linear-gradient(180deg,#0a0a0f 0%,#14110a 50%,#1a1500 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:40px 28px 32px;max-width:430px;margin:0 auto;overflow-y:auto;opacity:1;transition:opacity .45s ease,transform .45s ease}
+#welcome-screen{position:fixed;inset:0;z-index:1000;background:linear-gradient(160deg,#050508 0%,#0f0d00 45%,#1a1500 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:40px 28px 32px;max-width:430px;margin:0 auto;overflow-y:auto;opacity:1;transition:opacity .45s ease,transform .45s ease}
 #welcome-screen.hidden{opacity:0;pointer-events:none;transform:scale(1.03)}
-.welcome-top{display:flex;flex-direction:column;align-items:center;width:100%}
-.welcome-logo{font-family:var(--font);font-weight:700;font-size:52px;font-style:italic;color:#f59e0b;letter-spacing:-1px;margin-top:20px;filter:drop-shadow(0 4px 24px rgba(245,158,11,.4))}
+#welcome-particles{position:absolute;inset:0;pointer-events:none;z-index:0;width:100%;height:100%}
+.welcome-top{display:flex;flex-direction:column;align-items:center;width:100%;position:relative;z-index:1}
+.welcome-logo{font-family:var(--font);font-weight:700;font-size:56px;font-style:italic;color:#f59e0b;letter-spacing:-1px;margin-top:20px;animation:logoIn .7s cubic-bezier(.34,1.56,.64,1) both,logoGlow 2.8s ease-in-out infinite .8s}
 .welcome-logo span{color:#fbbf24}
-.welcome-tag{font-family:var(--font);font-size:14px;color:var(--text2);margin-top:8px;letter-spacing:.5px;text-align:center}
-.welcome-hero{width:100%;margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:14px}
+@keyframes logoIn{from{opacity:0;transform:scale(.55) translateY(-16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 4px 24px rgba(245,158,11,.4))}50%{filter:drop-shadow(0 4px 44px rgba(245,158,11,.85)) drop-shadow(0 0 60px rgba(245,158,11,.25))}}
+.welcome-tag{font-family:var(--font);font-size:14px;color:var(--text2);margin-top:8px;letter-spacing:.5px;text-align:center;animation:fadeUp .6s .35s both}
+.welcome-stats{display:flex;gap:0;width:100%;margin-top:18px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:14px;overflow:hidden;animation:fadeUp .6s .5s both}
+.welcome-stat{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 6px;position:relative}
+.welcome-stat:not(:last-child)::after{content:'';position:absolute;right:0;top:18%;height:64%;width:1px;background:rgba(245,158,11,.2)}
+.welcome-stat-num{font-family:var(--font);font-weight:700;font-size:20px;color:#f59e0b;line-height:1}
+.welcome-stat-lbl{font-family:var(--font);font-size:10px;color:var(--text3);margin-top:3px;text-align:center;letter-spacing:.3px}
+.welcome-hero{width:100%;margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:14px;animation:fadeUp .6s .45s both}
 .welcome-emoji-row{display:flex;gap:14px;margin-bottom:8px}
-.welcome-emoji{font-size:38px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));animation:wfloat 3s ease-in-out infinite}
+.welcome-emoji{font-size:40px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));animation:wfloat 3s ease-in-out infinite}
+.welcome-emoji:nth-child(1){animation-delay:0s}
 .welcome-emoji:nth-child(2){animation-delay:.5s}
 .welcome-emoji:nth-child(3){animation-delay:1s}
 .welcome-emoji:nth-child(4){animation-delay:1.5s}
-@keyframes wfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes wfloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.1)}}
 .welcome-title{font-family:var(--font);font-weight:700;font-size:26px;color:#f0f0f5;text-align:center;line-height:1.25;font-style:italic;margin-top:8px}
 .welcome-title em{color:#f59e0b;font-style:italic}
 .welcome-sub{font-family:var(--font);font-size:14px;color:var(--text2);text-align:center;line-height:1.55;margin-top:12px;max-width:320px}
-.welcome-features{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:28px}
-.welcome-feat{display:flex;align-items:center;gap:12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:14px;padding:12px 14px}
-.welcome-feat-icon{width:38px;height:38px;border-radius:10px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.welcome-features{width:100%;display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.welcome-feat{display:flex;align-items:center;gap:12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:14px;padding:12px 14px;opacity:0;transform:translateX(-20px);transition:opacity .45s,transform .45s,border-color .2s,background .2s}
+.welcome-feat.feat-in{opacity:1;transform:translateX(0)}
+.welcome-feat:active{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.35)}
+.welcome-feat-icon{width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;transition:transform .25s}
+.welcome-feat.feat-in:active .welcome-feat-icon{transform:scale(1.15) rotate(-6deg)}
 .welcome-feat-txt{flex:1}
 .welcome-feat-title{font-family:var(--font);font-weight:700;font-size:13px;color:#f0f0f5;margin-bottom:2px}
 .welcome-feat-desc{font-family:var(--font);font-size:11.5px;color:var(--text2);line-height:1.4}
-.welcome-bottom{width:100%;display:flex;flex-direction:column;gap:10px;margin-top:24px;flex-shrink:0}
-.welcome-cta{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#f59e0b 0%,#d97706 100%);color:#0a0a0f;font-family:var(--font);font-weight:700;font-size:16px;cursor:pointer;letter-spacing:.3px;box-shadow:0 6px 20px rgba(245,158,11,.35);transition:transform .2s ease,box-shadow .2s ease}
+.welcome-bottom{width:100%;display:flex;flex-direction:column;gap:10px;margin-top:24px;flex-shrink:0;position:relative;z-index:1}
+.welcome-cta{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,#f59e0b 0%,#d97706 100%);color:#0a0a0f;font-family:var(--font);font-weight:700;font-size:16px;cursor:pointer;letter-spacing:.3px;box-shadow:0 6px 20px rgba(245,158,11,.35);transition:transform .2s ease,box-shadow .2s ease;position:relative;overflow:hidden;animation:ctaPulse 3s ease-in-out infinite 1.2s}
+.welcome-cta::after{content:'';position:absolute;top:0;left:-80%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);animation:wShimmer 2.8s ease-in-out infinite 1.8s}
+@keyframes wShimmer{0%{left:-80%}100%{left:130%}}
+@keyframes ctaPulse{0%,100%{box-shadow:0 6px 20px rgba(245,158,11,.35)}50%{box-shadow:0 8px 34px rgba(245,158,11,.7),0 0 0 5px rgba(245,158,11,.1)}}
 .welcome-cta:active{transform:scale(.97);box-shadow:0 4px 12px rgba(245,158,11,.3)}
 .welcome-cta-sub{font-family:var(--font);font-size:11px;color:var(--text3);text-align:center;margin-top:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── TOPBAR ── */
 #topbar{padding:11px 18px 9px;display:flex;align-items:center;justify-content:space-between;background:#0a0a0f;border-bottom:1px solid var(--border);flex-shrink:0;z-index:30}
@@ -1146,9 +1162,25 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:var(--font);co
 
 <!-- ═══ WELCOME SCREEN ─ TOUJOURS VISIBLE AU CHARGEMENT ═══ -->
 <div id="welcome-screen" style="display:flex">
+  <canvas id="welcome-particles"></canvas>
   <div class="welcome-top">
     <div class="welcome-logo"><em>Fisca<span>+</span></em></div>
     <div class="welcome-tag">L'app qui te forme à la finance, en s'amusant</div>
+
+    <div class="welcome-stats">
+      <div class="welcome-stat">
+        <div class="welcome-stat-num" data-target="2400" data-suffix="+">0</div>
+        <div class="welcome-stat-lbl">apprenants</div>
+      </div>
+      <div class="welcome-stat">
+        <div class="welcome-stat-num" data-target="22">0</div>
+        <div class="welcome-stat-lbl">modules</div>
+      </div>
+      <div class="welcome-stat">
+        <div class="welcome-stat-num" data-target="100" data-suffix="%">0</div>
+        <div class="welcome-stat-lbl">gratuit</div>
+      </div>
+    </div>
 
     <div class="welcome-hero">
       <div class="welcome-emoji-row">
@@ -1158,7 +1190,7 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:var(--font);co
         <span class="welcome-emoji">🧠</span>
       </div>
       <div class="welcome-title">Deviens <em>autonome</em><br>avec ton argent</div>
-      <div class="welcome-sub">Fiscalité, épargne, bourse, immobilier — apprends sans prérequis, en quelques minutes par jour.</div>
+      <div class="welcome-sub">Fiscalité, épargne, bourse, immobilier — apprends sans prérequis, en quelques minutes par jour.</div>
     </div>
 
     <div class="welcome-features">
@@ -1172,7 +1204,7 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:var(--font);co
       <div class="welcome-feat">
         <div class="welcome-feat-icon">🎯</div>
         <div class="welcome-feat-txt">
-          <div class="welcome-feat-title">Quiz & fiches</div>
+          <div class="welcome-feat-title">Quiz &amp; fiches</div>
           <div class="welcome-feat-desc">Valide tes acquis à chaque étape, gagne des pièces</div>
         </div>
       </div>
@@ -2057,6 +2089,51 @@ function closeWelcome(){
     _analytics.track('welcome_start',{ts:Date.now()});
   }
 }
+
+(function(){
+  var canvas=document.getElementById('welcome-particles');
+  if(!canvas) return;
+  var ctx=canvas.getContext('2d');
+  var pts=[];
+  function resize(){canvas.width=canvas.offsetWidth||320;canvas.height=canvas.offsetHeight||680;}
+  resize();
+  for(var i=0;i<35;i++){pts.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2.2+.4,vx:(Math.random()-.5)*.35,vy:-(Math.random()*.55+.08),a:Math.random()*.5+.1});}
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pts.forEach(function(p){
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(245,158,11,'+p.a+')';ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.y<-6){p.y=canvas.height+6;}
+      if(p.x<0){p.x=canvas.width;}
+      if(p.x>canvas.width){p.x=0;}
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  setTimeout(function(){
+    document.querySelectorAll('.welcome-stat-num').forEach(function(el){
+      var target=parseInt(el.dataset.target)||0;
+      var suffix=el.dataset.suffix||'';
+      var dur=1300,start=null;
+      function step(ts){
+        if(!start)start=ts;
+        var prog=Math.min((ts-start)/dur,1);
+        var ease=1-Math.pow(1-prog,3);
+        var val=Math.round(ease*target);
+        var display=target>=1000?(val>=1000?(Math.round(val/100)/10)+'k':val):val;
+        el.textContent=display+suffix;
+        if(prog<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  },550);
+  setTimeout(function(){
+    document.querySelectorAll('.welcome-feat').forEach(function(el,i){
+      setTimeout(function(){el.classList.add('feat-in');},i*110);
+    });
+  },480);
+})();
 
 function showWelcomeAgain(){
   var w=document.getElementById('welcome-screen');
