@@ -6,6 +6,13 @@
 <title>Fisca+</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- GSAP — animations fluides -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<!-- Tailwind CSS CDN — preflight désactivé pour préserver les styles existants -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={corePlugins:{preflight:false}}</script>
+<!-- DaisyUI — composants UI modernes -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -1130,6 +1137,56 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:var(--font);co
 @keyframes popIn{0%{transform:scale(0) rotate(-8deg);opacity:0}80%{transform:scale(1.08) rotate(1deg)}100%{transform:scale(1) rotate(0);opacity:1}}
 
 .qfeedback.show{animation:popIn .22s cubic-bezier(.34,1.56,.64,1) both}
+
+/* ── Design Enhancements — GSAP · Tailwind · DaisyUI ── */
+
+/* Boutons: meilleur feedback tactile */
+.welcome-cta,.btn-check:not(:disabled),.fbtn,.cp-cta,.f-chapter-btn,.coin-pack-btn{
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease,opacity .15s ease;
+}
+.welcome-cta:hover{box-shadow:0 8px 28px rgba(245,158,11,.5)!important;transform:translateY(-1px)!important}
+
+/* Progress bar dorée avec glow */
+.qprogfill{background:linear-gradient(90deg,#f59e0b,#fbbf24)!important;box-shadow:0 0 10px rgba(245,158,11,.45)}
+.dom-prog-fill{background:linear-gradient(90deg,#f59e0b,#fbbf24)!important}
+
+/* Glassmorphism sur les panneaux flottants */
+.shop-sheet,.auth-sheet,.ranking-panel,.nlm-card{
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+
+/* Glow animé sur le nœud actif */
+@keyframes activeGlow{
+  0%,100%{box-shadow:0 0 0 4px rgba(245,158,11,.12),0 4px 18px rgba(245,158,11,.22)}
+  50%{box-shadow:0 0 0 10px rgba(245,158,11,.2),0 6px 28px rgba(245,158,11,.4)}
+}
+.active-node{animation:activeGlow 2s ease-in-out infinite!important}
+
+/* Formation cards: hover subtil */
+.fcard{transition:border-color .22s ease,box-shadow .22s ease,transform .2s ease}
+.fcard:hover{border-color:rgba(245,158,11,.3)!important;box-shadow:0 4px 20px rgba(245,158,11,.1)!important}
+
+/* DaisyUI tooltip minimal */
+[data-tip]{position:relative}
+[data-tip]:hover::after{
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 7px);left:50%;
+  transform:translateX(-50%);background:#1e1e2e;color:#f0f0f5;padding:5px 9px;
+  border-radius:8px;font-size:11px;white-space:nowrap;border:1px solid var(--border2);
+  pointer-events:none;z-index:999;font-family:var(--font);
+  box-shadow:0 4px 12px rgba(0,0,0,.4);
+}
+
+/* Streak pill: subtle glow */
+@keyframes streakGlow{0%,100%{filter:none}50%{filter:drop-shadow(0 0 5px rgba(245,158,11,.4))}}
+.streak-pill{animation:streakGlow 3.5s ease-in-out infinite}
+
+/* Coin display: shimmer on earn */
+@keyframes coinShimmer{
+  0%{border-color:rgba(245,158,11,.3)}
+  35%{border-color:#f59e0b;box-shadow:0 0 14px rgba(245,158,11,.45)}
+  100%{border-color:rgba(245,158,11,.3)}
+}
+.coins-display.pop{animation:coinShimmer .75s ease-out}
 
 </style>
 </head>
@@ -2459,6 +2516,13 @@ function showScore(){
   closeQuiz();
   document.getElementById('scoreScreen').classList.add('show');
   document.getElementById('scoreScreen').scrollTop=0;
+  if(typeof gsap !== 'undefined') setTimeout(function(){
+    gsap.from('#scoreScreen .score-emoji',{scale:0,rotation:-20,duration:.7,ease:'back.out(1.7)'});
+    gsap.from('#scoreScreen .score-title',{y:20,opacity:0,duration:.5,delay:.15,ease:'power3.out'});
+    gsap.from('#scoreScreen .score-sub',  {y:15,opacity:0,duration:.4,delay:.25});
+    gsap.from('#scoreScreen .score-card', {y:30,opacity:0,duration:.5,stagger:.1,delay:.35,ease:'power2.out'});
+    gsap.from('#scoreScreen .btn-menu',   {y:20,opacity:0,duration:.4,delay:.7});
+  }, 150);
   setTimeout(launchConfetti, 200);
   saveProgress();
   _analytics.track('quiz_complete',{domain:quizDomain,level:quizLevelIdx,pct:pct,levelReached:domProg[quizDomain]});
@@ -3174,30 +3238,49 @@ function launchConfetti() {
 /* ======= SERPENTIN ANIMATIONS AMÉLIORÉES ======= */
 function animateSnakeNodes() {
   var nodes = document.querySelectorAll('.lesson-node');
-  nodes.forEach(function(node, i){
-    node.style.opacity='0';
-    setTimeout(function(){
-      node.style.opacity='';
-      node.classList.add('snake-node-animated');
-      node.style.animationDelay='0s';
-    }, i*80);
-  });
-  var conns = document.querySelectorAll('.snake-conn');
-  conns.forEach(function(conn, i){
-    var paths = conn.querySelectorAll('path');
-    paths.forEach(function(p){
-      p.style.strokeDasharray='200';
-      p.style.strokeDashoffset='200';
-      setTimeout(function(){
-        p.style.transition='stroke-dashoffset .6s ease-out';
-        p.style.strokeDashoffset='0';
-      }, 100 + i*80);
+  if(typeof gsap !== 'undefined'){
+    gsap.from(nodes, {
+      scale:.5, opacity:0, duration:.45, stagger:.07,
+      ease:'back.out(1.5)', clearProps:'transform,opacity'
     });
-  });
-  var activeConn = document.querySelector('.snake-conn-active');
-  if(activeConn){
-    var ap = activeConn.querySelector('path');
-    if(ap) { ap.style.animation='pathPulse 1.8s ease-in-out infinite'; }
+    var connPaths = document.querySelectorAll('.snake-conn path');
+    gsap.fromTo(connPaths,
+      {strokeDashoffset:200, strokeDasharray:'200 200'},
+      {strokeDashoffset:0, strokeDasharray:'200 0', duration:.65, stagger:.08, ease:'power2.out', delay:.12}
+    );
+    var active = document.querySelector('.active-node');
+    if(active){
+      gsap.to(active, {
+        boxShadow:'0 0 0 10px rgba(245,158,11,.2), 0 6px 28px rgba(245,158,11,.4)',
+        repeat:-1, yoyo:true, duration:1.3, ease:'sine.inOut'
+      });
+    }
+  } else {
+    nodes.forEach(function(node, i){
+      node.style.opacity='0';
+      setTimeout(function(){
+        node.style.opacity='';
+        node.classList.add('snake-node-animated');
+        node.style.animationDelay='0s';
+      }, i*80);
+    });
+    var conns = document.querySelectorAll('.snake-conn');
+    conns.forEach(function(conn, i){
+      var paths = conn.querySelectorAll('path');
+      paths.forEach(function(p){
+        p.style.strokeDasharray='200';
+        p.style.strokeDashoffset='200';
+        setTimeout(function(){
+          p.style.transition='stroke-dashoffset .6s ease-out';
+          p.style.strokeDashoffset='0';
+        }, 100 + i*80);
+      });
+    });
+    var activeConn = document.querySelector('.snake-conn-active');
+    if(activeConn){
+      var ap = activeConn.querySelector('path');
+      if(ap) { ap.style.animation='pathPulse 1.8s ease-in-out infinite'; }
+    }
   }
 }
 
@@ -5120,6 +5203,57 @@ function resetLivretQCM(){
   if(res) res.style.display = 'none';
   renderLivretQCM();
 }
+
+// ── GSAP · DaisyUI · Tailwind — animations globales ──
+(function(){
+  if(typeof gsap === 'undefined') return;
+
+  // Welcome screen entrance
+  function gsapWelcome(){
+    var w = document.getElementById('welcome-screen');
+    if(!w || w.style.display === 'none') return;
+    var tl = gsap.timeline({ defaults:{ease:'power3.out'} });
+    tl.from('.welcome-logo',    {y:-38,opacity:0,duration:.65})
+      .from('.welcome-tag',     {y:-16,opacity:0,duration:.45}, '-=.3')
+      .from('.welcome-emoji',   {scale:0,opacity:0,duration:.5,stagger:.1,ease:'back.out(1.7)'}, '-=.25')
+      .from('.welcome-title',   {y:22,opacity:0,duration:.5}, '-=.2')
+      .from('.welcome-sub',     {y:15,opacity:0,duration:.45}, '-=.3')
+      .from('.welcome-feat',    {y:32,opacity:0,duration:.5,stagger:.13}, '-=.25')
+      .from('.welcome-cta',     {scale:.82,opacity:0,duration:.55,ease:'back.out(1.7)'}, '-=.1')
+      .from('.welcome-cta-sub', {opacity:0,duration:.4}, '-=.2');
+  }
+
+  // Nav icon bounce on click
+  document.querySelectorAll('.nvi').forEach(function(nvi){
+    nvi.addEventListener('click', function(){
+      var svg = this.querySelector('svg');
+      if(svg) gsap.fromTo(svg,
+        {scale:.62, rotate:-14},
+        {scale:1, rotate:0, duration:.42, ease:'back.out(2.2)'}
+      );
+    });
+  });
+
+  // Coins counter pop when value changes
+  var coinsEl = document.getElementById('coinsCount');
+  if(coinsEl){
+    new MutationObserver(function(){
+      var disp = document.querySelector('.coins-display');
+      if(disp){ disp.classList.remove('pop'); void disp.offsetWidth; disp.classList.add('pop'); }
+      gsap.fromTo(coinsEl, {scale:1.45,color:'#fbbf24'}, {scale:1,color:'#f59e0b',duration:.5,ease:'back.out(1.5)'});
+    }).observe(coinsEl, {childList:true,characterData:true,subtree:true});
+  }
+
+  // XP pill pop when streak updates
+  var xpEl = document.querySelector('.xp-pill');
+  if(xpEl){
+    new MutationObserver(function(){
+      gsap.fromTo(xpEl, {scale:1.3}, {scale:1, duration:.4, ease:'back.out(2)'});
+    }).observe(xpEl, {childList:true,characterData:true,subtree:true});
+  }
+
+  gsapWelcome();
+})();
 
 </script>
 
