@@ -8,11 +8,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <!-- GSAP — animations fluides -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<!-- Tailwind CSS CDN — preflight désactivé pour préserver les styles existants -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={corePlugins:{preflight:false}}</script>
-<!-- DaisyUI — composants UI modernes -->
-<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet"/>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -5310,24 +5305,9 @@ function resetLivretQCM(){
   renderLivretQCM();
 }
 
-// ── GSAP · DaisyUI · Tailwind — animations globales ──
+// ── GSAP — animations globales ──
 (function(){
   if(typeof gsap === 'undefined') return;
-
-  // Welcome screen entrance
-  function gsapWelcome(){
-    var w = document.getElementById('welcome-screen');
-    if(!w || w.style.display === 'none') return;
-    var tl = gsap.timeline({ defaults:{ease:'power3.out'} });
-    tl.from('.welcome-logo',    {y:-38,opacity:0,duration:.65})
-      .from('.welcome-tag',     {y:-16,opacity:0,duration:.45}, '-=.3')
-      .from('.welcome-emoji',   {scale:0,opacity:0,duration:.5,stagger:.1,ease:'back.out(1.7)'}, '-=.25')
-      .from('.welcome-title',   {y:22,opacity:0,duration:.5}, '-=.2')
-      .from('.welcome-sub',     {y:15,opacity:0,duration:.45}, '-=.3')
-      .from('.welcome-feat',    {y:32,opacity:0,duration:.5,stagger:.13}, '-=.25')
-      .from('.welcome-cta',     {scale:.82,opacity:0,duration:.55,ease:'back.out(1.7)'}, '-=.1')
-      .from('.welcome-cta-sub', {opacity:0,duration:.4}, '-=.2');
-  }
 
   // Nav icon bounce on click
   document.querySelectorAll('.nvi').forEach(function(nvi){
@@ -5358,7 +5338,6 @@ function resetLivretQCM(){
     }).observe(xpEl, {childList:true,characterData:true,subtree:true});
   }
 
-  gsapWelcome();
 })();
 
 </script>
